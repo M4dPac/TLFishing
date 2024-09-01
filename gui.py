@@ -8,7 +8,7 @@ config = {
         "left": 0,
         "width": 1920,
         "height": 1080,
-        "mon": 2,
+        "mon": 0,
     },
     "shutdown_pc": False,
     "fishing_screen": {"x1": 666, "x2": 1248, "y1": 316, "y2": 419},
@@ -29,13 +29,16 @@ def main(page: ft.Page):
 
     screen_text = ft.Text("Разрешение экрана", size=20)
     screen_width_textfield = ft.TextField(
-        label="Ширина", value=str(settings.monitor_resolution["width"])
+        label="Ширина", expand=True, value=str(settings.monitor_resolution["width"])
     )
     screen_height_textfield = ft.TextField(
-        label="Высота", value=str(settings.monitor_resolution["height"])
+        label="Высота", expand=True, value=str(settings.monitor_resolution["height"])
+    )
+    screen_number = ft.TextField(
+        label="Номер", expand=True, value=str(settings.monitor_resolution["mon"])
     )
     screen_textgield_row = ft.Row(
-        controls=[screen_width_textfield, screen_height_textfield]
+        controls=[screen_width_textfield, screen_height_textfield, screen_number]
     )
 
     screen_column = ft.Column(
