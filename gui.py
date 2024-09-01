@@ -1,4 +1,4 @@
-import customtkinter
+import flet as ft
 import multiprocessing
 
 
@@ -22,48 +22,36 @@ class Settings:
             setattr(self, name, value)
 
 
-class App(customtkinter.CTk):
-    def __init__(self):
-        super().__init__()
+def main(page: ft.Page):
+    page.title = "TLFishing"
+    # page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-        self.title("TLFshing Setup")
-        self.geometry("1100x580")
-        # self.resizable(False, False)
+    screen_text = ft.Text("Разрешение экрана", size=20)
+    screen_width_textfield = ft.TextField(
+        label="Ширина", value=str(settings.monitor_resolution["width"])
+    )
+    screen_height_textfield = ft.TextField(
+        label="Высота", value=str(settings.monitor_resolution["height"])
+    )
+    screen_textgield_row = ft.Row(
+        controls=[screen_width_textfield, screen_height_textfield]
+    )
 
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure((2, 3), weight=0)
-        self.grid_rowconfigure((0, 1, 2), weight=1)
+    screen_column = ft.Column(
+        controls=[screen_text, screen_textgield_row],
+    )
+    screen_box = ft.Container(
+        content=screen_column,
+        alignment=ft.alignment.center,
+        bgcolor=ft.colors.INDIGO_500,
+        margin=10,
+        padding=10,
+        border_radius=10,
+    )
 
-        self.screen_setting_frame = customtkinter.CTkFrame(self, corner_radius=0)
-        self.screen_setting_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
-
-        self.screen_title = customtkinter.CTkLabel(
-            self.screen_setting_frame, text="Screen", fg_color="transparent"
-        )
-        self.screen_title.grid(row=0, column=0, padx=20, pady=20)
-        self.entry = customtkinter.CTkEntry(
-            self.screen_setting_frame, placeholder_text="Width"
-        )
-        self.entry.grid(row=1, column=1, padx=20, pady=20)
-
-        self.entry1 = customtkinter.CTkEntry(
-            self.screen_setting_frame, placeholder_text="Height"
-        )
-        self.entry1.grid(row=1, column=2, padx=20, pady=20)
-        self.checkbox_1 = customtkinter.CTkCheckBox(self, text="checkbox_1")
-
-        self.checkbox_1.grid(row=1, column=0, padx=20, pady=20)
-
-        self.button_start = customtkinter.CTkButton(
-            self, text="start", command=lambda: print("Start fishing")
-        )
-        self.button_end = customtkinter.CTkButton(
-            self, text="exit", command=lambda: exit()
-        )
-
-        self.button_start.grid(row=2, column=0, padx=20, pady=20)
-        self.button_end.grid(row=2, column=1, padx=20, pady=20)
+    page.add(screen_box)
 
 
-app = App()
-app.mainloop()
+settings = Settings()
+ft.app(main)
