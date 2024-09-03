@@ -1,5 +1,4 @@
 import flet as ft
-import multiprocessing
 
 
 config = {
@@ -20,6 +19,13 @@ class Settings:
     def __init__(self):
         for name, value in config.items():
             setattr(self, name, value)
+
+
+class TitleText(ft.Text):
+    def __init__(self, value):
+        super().__init__()
+        self.value = value
+        self.size = 20
 
 
 class TextField(ft.TextField):
@@ -47,7 +53,8 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     # Разрешение экрана
-    screen_text = ft.Text("Разрешение экрана", size=20)
+    # top, left, width, height
+    screen_text = TitleText("Разрешение экрана")
     screen_width_textfield = TextField(
         label="Ширина", value=str(settings.monitor_resolution["width"])
     )
@@ -64,11 +71,58 @@ def main(page: ft.Page):
     screen_column = ft.Column(
         controls=[screen_text, screen_textgield_row],
     )
-    screen_box = ContainerIndigo(
+    screen_container = ContainerIndigo(
         content=screen_column,
     )
 
-    page.add(screen_box)
+    page.add(screen_container)
+
+    settings.monitor_resolution["width"] = int(screen_width_textfield.value or "O")
+    settings.monitor_resolution["heigth"] = int(screen_width_textfield.value or "O")
+    settings.monitor_resolution["mon"] = int(screen_number.value or "O")
+
+    # Экран рыбалки
+
+    fishing_screen_text = TitleText(value="Экран рыбалки")
+
+    x1, x2, y1, y2 = (
+        settings.fishing_screen["x1"],
+        settings.fishing_screen["x2"],
+        settings.fishing_screen["y1"],
+        settings.fishing_screen["y2"],
+    )
+    x1_slider = ft.RangeSlider(
+        min=0, max=x2 - 1, start_value=x1, end_value=200000, label="{value}%"
+    )
+
+    fishing_screen_container = ContainerIndigo(
+        content=ft.Column(
+            controls=[
+                fishing_screen_text,
+                ft.Row(
+                    controls=[
+                        ft.Column(
+                            controls=[
+                                ft.Text(value="x1"),
+                                x1_slider,
+                                ft.Text(value="x2"),
+                                x1_slider,
+                            ]
+                        ),
+                        ft.Column(
+                            controls=[
+                                ft.Text(value="y1"),
+                                x1_slider,
+                                ft.Text(value="y2"),
+                                x1_slider,
+                            ]
+                        ),
+                    ]
+                ),
+            ]
+        )
+    )
+    page.add(fishing_screen_container)
 
 
 settings = Settings()
